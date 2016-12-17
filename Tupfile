@@ -1,0 +1,3 @@
+CFLAGS = -Wall -Werror
+
+: src/*.m |> clang %f -o %o -framework Foundation -I include $(CFLAGS) |> target/trash
