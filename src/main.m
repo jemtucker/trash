@@ -6,8 +6,9 @@
 static BOOL g_recursive = NO;
 
 void usage(const int code) {
-    printf("Usage: trash [-hv] FILE1 [FILE2] [...]\n");
+    printf("Usage: trash [-hrv] FILE1 [FILE2] [...]\n");
     printf("    -h --help       Show this help\n");
+    printf("    -r --recursive  Delete folders recursively\n");
     printf("    -v --verbose    Set verbose mode\n");
     exit(code);
 }
