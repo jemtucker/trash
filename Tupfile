@@ -1,3 +1,4 @@
 CFLAGS = -Wall -Werror
 
-: src/*.m |> clang %f -o %o -framework Foundation -I include $(CFLAGS) |> target/trash
+: foreach src/*.m |> clang -c %f -o %o -I include $(CFLAGS) |> target/%B.o
+: target/*.o |> clang %f -o %o -framework Foundation $(CFLAGS) |> target/trash
