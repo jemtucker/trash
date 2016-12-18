@@ -1,0 +1,11 @@
+language: objective-c
+
+cache: cargo
+
+script: tup
+
+addons:
+  apt:
+    packages:
+      - fuse-dev
+      - tup
