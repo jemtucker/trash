@@ -1,0 +1,9 @@
+cache: cargo
+
+script: tup
+
+addons:
+  apt:
+    packages:
+      - libfuse-dev
+      - tup

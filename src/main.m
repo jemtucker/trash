@@ -4,10 +4,13 @@
 #include "TrashManager.h"
 
 static BOOL g_recursive = NO;
+static BOOL g_restore = NO;
 
 void usage(const int code) {
-    printf("Usage: trash [-hrv] FILE1 [FILE2] [...]\n");
+    printf("Usage: trash [-hlprv] FILE1 [FILE2] [...]\n");
     printf("    -h --help       Show this help\n");
+    printf("    -l --list       List the current Trash contents\n");
+    printf("    -p --put-back   Restore a file from the Trash\n");
     printf("    -r --recursive  Delete folders recursively\n");
     printf("    -v --verbose    Set verbose mode\n");
     exit(code);
@@ -30,6 +33,10 @@ void parseArgument(const NSString* arg) {
         TrashManager* tm = [[TrashManager alloc] init];
         [tm listTrash];
         exit(EXIT_SUCCESS);
+    } else if ([arg isEqualToString:@"--put-back"] ||
+        [arg isEqualToString:@"-p"]) {
+        // List the current contents of the trash
+        g_restore = YES;
     } else {
         // Unknown option
         ERROR(@"Illegal option [%@]", arg);
@@ -67,7 +74,9 @@ int main(const int argc, const char* argv[]) {
 
             DEBUG(@"Read positional argument [%@]", path);
 
-            if ([manager trashFile:path recursive:g_recursive]) {
+            if (g_restore) {
+                [manager restoreFile:path];
+            } else if ([manager trashFile:path recursive:g_recursive]) {
                 return EXIT_SUCCESS;
             } else {
                 return EXIT_FAILURE;

@@ -15,7 +15,7 @@ Restore a file from the current users Trash directory.
 @param path Full path to the file to restore
 @return TRUE if successful
 */
-//- (BOOL) restoreFile:(NSString*) path;
+- (BOOL) restoreFile:(NSString*) path;
 
 /**
 Delete a file from disk safely by sending to the Trash.
