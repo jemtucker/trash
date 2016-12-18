@@ -21,12 +21,22 @@
 }
 
 - (BOOL) deleteFile:(NSString*) path {
-    // TODO check path is relative
-    NSURL *url = [NSURL URLWithString: path relativeToURL: _baseURL];
+    if ([path hasPrefix: @"."]) {
+        ERROR(@"Unsupported path");
+        return NO;
+    }
 
-    BOOL isDirectory = NO;
+    NSURL *url;
+    if ([path hasPrefix: @"/"]) {
+        url = [NSURL fileURLWithPath: path];
+    } else {
+        url = [NSURL URLWithString: path relativeToURL: _baseURL];
+    }
+
+    DEBUG(@"Built URL [%@]", [url absoluteURL]);
 
     // Check the path exists before doing anything else
+    BOOL isDirectory = NO;
     if (![_manager fileExistsAtPath: path isDirectory: &isDirectory]) {
         ERROR(@"File [%@] does not exist", path);
         return NO;
