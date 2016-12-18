@@ -1,5 +1,6 @@
 #include "TrashManager.h"
 #include "Log.h"
+#include "DSStore.h"
 
 @implementation TrashManager {
     NSFileManager* _manager;
@@ -40,7 +41,7 @@
 
     if (!contents) {
         ERROR(@"Error listing Trash contents [%@]",
-            [error localizedDescription]);
+            error.localizedDescription);
         return NO;
     }
 
@@ -49,6 +50,19 @@
     }
 
     return YES;
+}
+
+- (BOOL) restoreFile:(NSString*) path {
+    NSString* dsStorePath = @"/Users/jemtucker/.Trash/.DS_Store";
+    NSData* data = [_manager contentsAtPath:dsStorePath];
+
+    DSStore* dsStore = [[DSStore alloc] initWithData:data];
+    NSError* error = nil;
+    if (![dsStore parseWithError:&error]) {
+        ERROR(@"Error parsing .DS_Store [%@]", error.localizedDescription);
+    }
+
+    return NO;
 }
 
 - (BOOL) trashFile:(NSString*) path recursive:(BOOL) recursive {
