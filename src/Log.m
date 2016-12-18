@@ -9,7 +9,7 @@ static Log* getLog();
 - (id) init {
     self = [super init];
     if (self) {
-        _level = DEBUG;
+        _level = ERROR;
     }
 
     return self;
@@ -46,6 +46,11 @@ static Log* getLog();
 + (void) debug: (NSString*) msg {
     Log* log = getLog();
     [log write: msg withLevel: DEBUG];
+}
+
++ (void) setVerbose {
+    Log* log = getLog();
+    [log setLevel: DEBUG];
 }
 
 @end

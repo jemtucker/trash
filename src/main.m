@@ -3,28 +3,56 @@
 #include "Log.h"
 #include "FileDeleter.h"
 
-void usage() {
-    printf("Usage: trash FILE \n");
+void usage(const int code) {
+    printf("Usage: trash [-hv] FILE1 [FILE2] [...]\n");
+    printf("    -h --help       Show this help\n");
+    printf("    -v --verbose    Set verbose mode\n");
+    exit(code);
+}
+
+void parseArgument(const NSString* arg) {
+    if ([arg isEqualToString: @"--verbose"] ||
+        [arg isEqualToString: @"-v"]) {
+        [Log setVerbose];
+        DEBUG(@"Verbose logging on");
+    } else if ([arg isEqualToString: @"--help"] ||
+        [arg isEqualToString: @"-h"]) {
+        usage(EXIT_SUCCESS);
+    } else {
+        ERROR(@"Illegal option [%@]", arg);
+        usage(EXIT_FAILURE);
+    }
 }
 
 int main(const int argc, const char* argv[]) {
     @autoreleasepool {
+        // Must supply at least one filename to delete
+        if (argc < 2) {
+            usage(EXIT_FAILURE);
+        }
 
-        // Currently we only support deleting 1 file at a time
-        if (argc != 2) {
-            DEBUG(@"Not enough arguments");
+        // Parse the arguments
+        int pos = 1;
+        for (; pos < argc; pos++) {
+            NSString* arg = [NSString stringWithUTF8String: argv[pos]];
+            if ([arg hasPrefix: @"-"]) {
+                parseArgument(arg);
+            } else {
+                break;
+            }
+        }
 
-            usage();
-            return EXIT_FAILURE;
+        // Check there are some filenames to parse, if not then exit
+        if (pos == argc) {
+            usage(EXIT_FAILURE);
         }
 
         // Delete each file
-        for (int i = 1; i < argc; i++) {
-            NSString* path = [NSString stringWithUTF8String: argv[i]];
+        FileDeleter* deleter = [[FileDeleter alloc] init];
+        for (; pos < argc; pos++) {
+            NSString* path = [NSString stringWithUTF8String: argv[pos]];
 
-            DEBUG(@"Read argument [%@]", path);
-
-            FileDeleter* deleter = [[FileDeleter alloc] init];
+            DEBUG(@"Read positional argument [%@]", path);
 
             if ([deleter deleteFile: path]) {
                 return EXIT_SUCCESS;

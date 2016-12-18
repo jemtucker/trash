@@ -24,4 +24,6 @@ Singleton to handle application logging.
 
 + (void) debug: (NSString*) msg;
 
++ (void) setVerbose;
+
 @end
