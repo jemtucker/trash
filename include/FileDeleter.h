@@ -12,7 +12,8 @@ folder.
 Moves a single file into the current users trash folder. Does not support
 directories.
 @param path Full path to the file to delete
+@param recursive Enable recursive deletion
 */
-- (BOOL) deleteFile: (NSString*) path;
+- (BOOL) deleteFile: (NSString*) path recursive: (BOOL) recursive;
 
 @end

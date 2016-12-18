@@ -20,7 +20,7 @@
     return self;
 }
 
-- (BOOL) deleteFile:(NSString*) path {
+- (BOOL) deleteFile:(NSString*) path recursive: (BOOL) recursive {
     if ([path hasPrefix: @"."]) {
         ERROR(@"Unsupported path");
         return NO;
@@ -43,7 +43,7 @@
     }
 
     // Check the path is not a directroy
-    if (isDirectory) {
+    if (isDirectory && !recursive) {
         ERROR(@"File [%@] is a directory", path);
         return NO;
     }

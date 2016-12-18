@@ -3,6 +3,8 @@
 #include "Log.h"
 #include "FileDeleter.h"
 
+static BOOL g_recursive = NO;
+
 void usage(const int code) {
     printf("Usage: trash [-hv] FILE1 [FILE2] [...]\n");
     printf("    -h --help       Show this help\n");
@@ -18,6 +20,9 @@ void parseArgument(const NSString* arg) {
     } else if ([arg isEqualToString: @"--help"] ||
         [arg isEqualToString: @"-h"]) {
         usage(EXIT_SUCCESS);
+    } else if ([arg isEqualToString: @"--recursive"] ||
+        [arg isEqualToString: @"-r"]) {
+        g_recursive = YES;
     } else {
         ERROR(@"Illegal option [%@]", arg);
         usage(EXIT_FAILURE);
@@ -54,7 +59,7 @@ int main(const int argc, const char* argv[]) {
 
             DEBUG(@"Read positional argument [%@]", path);
 
-            if ([deleter deleteFile: path]) {
+            if ([deleter deleteFile: path recursive: g_recursive]) {
                 return EXIT_SUCCESS;
             } else {
                 return EXIT_FAILURE;
