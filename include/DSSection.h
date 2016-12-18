@@ -1,8 +1,12 @@
 #include <Foundation/Foundation.h>
 
+#include "DSItem.h"
+
 @interface DSSection : NSObject {
 
 }
+
+@property (assign) NSArray<DSItem*>* items;
 
 /**
 Populate a DSSection from a binary blob, updating the passed offset to point

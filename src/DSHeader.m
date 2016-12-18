@@ -35,8 +35,20 @@
 
     DEBUG(@"Reading allocator with offset [%d]", *offset);
 
-    // Allocator offset and size can be skipped for now
-    *offset = *offset + (sizeof(uint32_t) * 2);
+    const uint32_t allocOffset1 = ReadUInt32(data, offset);
+    const uint32_t allocSize = ReadUInt32(data, offset);
+    const uint32_t allocOffset2 = ReadUInt32(data, offset);
+
+    if (allocOffset1 != allocOffset2) {
+        POPULATE_ERROR(error, @"Malformed allocator header");
+        return NO;
+    }
+
+    if (!allocSize) {
+        POPULATE_ERROR(error, @"Empty allocator");
+        return NO;
+    }
+    //*offset += allocSize;
 
     // Header left no room for anything else
     if (*offset > [data length]) {

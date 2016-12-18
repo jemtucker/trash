@@ -11,7 +11,7 @@
 - (id) init {
     self = [super init];
     if (self) {
-
+        _items = nil;
     }
     return self;
 }
@@ -20,37 +20,42 @@
     withOffset:(uint32_t*) offset
     andError:(NSError**) error {
 
-    DEBUG(@"Starting Offset: [%d]", *offset);
-    DEBUG(@"Data Length: [%lu]", (unsigned long) data.length);
-
     if (data.length < (*offset + 8)) {
         POPULATE_ERROR(error, @"Passed end of buffer parsing section");
     }
 
-    int chunk_offs = *offset;
-    DEBUG(@"Offset: [%d]", *offset);
+    int val1 = ReadUInt32(data, offset);
+    (void)val1; // Unsused;
 
-    int val2 = ReadUInt32(data, offset);
-    DEBUG(@"Offset: [%d]", *offset);
+    int flags = ReadUInt32(data, offset);
 
-    int numchunks = ReadUInt32(data, offset);
-    DEBUG(@"Offset: [%d]", *offset);
+    int numItems = ReadUInt32(data, offset);
 
-    DEBUG(@"Val2 [%d], numchunks [%d], chunk_offs [%d]", val2, numchunks, chunk_offs);
+    DEBUG(@"Parsing [%d] DSItems", numItems);
 
-    // NSMutableArray *parsedChunks = [NSMutableArray arrayWithCapacity:numchunks];
+    NSMutableArray<DSItem*>* items =
+        [NSMutableArray<DSItem*> arrayWithCapacity:numItems];
+    for (int i = 0; i < numItems; i++) {
+        // Extra four-byte value before each chunk
+        if (flags & 2) {
+            *offset += 4;
+        }
 
-    // for (int i = 0; i < numchunks; i++) {
-    //     if (val2 & 2) chunk_offs += 4; // Extra four-byte value before each chunk.
-    //     DSChunk *chunk = [DSChunk chunkWithData:self.data atOffset:chunk_offs];
-    //
-    //     if (![chunk parse]) return NO; // Done (or something went wrong
-    //
-    //     [parsedChunks addObject:chunk];
-    //     chunk_offs = chunk.offset;
-    // }
+        DSItem *item = [[DSItem alloc] init];
+        if (![item parseData:data withOffset:offset andError:error]) {
+            return NO;
+        }
 
-    return NO;
+        [items addObject:item];
+    }
+
+    if (self.items) {
+        [self.items release];
+    }
+
+    self.items = items;
+
+    return YES;
 }
 
 @end
