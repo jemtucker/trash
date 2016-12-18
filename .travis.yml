@@ -5,5 +5,5 @@ script: tup
 addons:
   apt:
     packages:
-      - fuse-dev
+      - libfuse-dev
       - tup
