@@ -2,7 +2,7 @@ language: objective-c
 
 cache: cargo
 
-script: tup
+script: tup 
 
 addons:
   apt:
