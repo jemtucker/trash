@@ -74,11 +74,15 @@ int main(const int argc, const char* argv[]) {
 
             DEBUG(@"Read positional argument [%@]", path);
 
+            BOOL success = TRUE;
+
             if (g_restore) {
-                [manager restoreFile:path];
-            } else if ([manager trashFile:path recursive:g_recursive]) {
-                return EXIT_SUCCESS;
+                success = [manager restoreFile:path];
             } else {
+                success = [manager trashFile:path recursive:g_recursive];
+            }
+
+            if (!success) {
                 return EXIT_FAILURE;
             }
         }

@@ -4,12 +4,12 @@
 
 }
 
-@property (assign) NSString* fileName;
-@property (assign) NSString* attributeName;
-@property (assign) NSString* typeName;
-@property (assign) NSObject* value;
-@property (assign) uint32_t attr;
-@property (assign) uint32_t type;
+@property (strong) NSString* fileName;
+@property (strong) NSString* attributeName;
+@property (strong) NSString* typeName;
+@property (strong) NSObject* value;
+@property uint32_t attr;
+@property uint32_t type;
 
 - (BOOL) parseData:(const NSData*) data
     withOffset:(uint32_t*) offset

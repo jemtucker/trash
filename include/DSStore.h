@@ -7,9 +7,9 @@
 
 }
 
-@property (assign) NSData* data;
-@property (assign) DSHeader* header;
-@property (assign) NSMutableArray<DSSection*>* sections;
+@property (strong) NSData* data;
+@property (strong) DSHeader* header;
+@property (strong) NSMutableArray<DSSection*>* sections;
 
 - (id) initWithData:(NSData*) data;
 

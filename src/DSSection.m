@@ -49,10 +49,6 @@
         [items addObject:item];
     }
 
-    if (self.items) {
-        [self.items release];
-    }
-
     self.items = items;
 
     return YES;

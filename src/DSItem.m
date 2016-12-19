@@ -42,19 +42,19 @@
         return NO;
     }
 
-    self.fileName = [[[NSString alloc] initWithBytes:data.bytes + *offset
+    self.fileName = [[NSString alloc] initWithBytes:data.bytes + *offset
         length:nameLength * 2 // 2 byte characters
-        encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE)] autorelease];
+        encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE)];
 
     *offset += nameLength * 2;
 
-    self.attributeName = [[[NSString alloc] initWithBytes:data.bytes + *offset
+    self.attributeName = [[NSString alloc] initWithBytes:data.bytes + *offset
         length:4
-        encoding:NSISOLatin1StringEncoding] autorelease];
+        encoding:NSISOLatin1StringEncoding];
 
-    self.typeName = [[[NSString alloc] initWithBytes:data.bytes + *offset + 4
+    self.typeName = [[NSString alloc] initWithBytes:data.bytes + *offset + 4
         length:4
-        encoding:NSISOLatin1StringEncoding] autorelease];
+        encoding:NSISOLatin1StringEncoding];
 
     _attr = ReadUInt32(data, offset);
     _type = ReadUInt32(data, offset);
@@ -131,9 +131,9 @@
                 return NO;
             }
 
-            self.value = [[[NSString alloc] initWithBytes:data.bytes + *offset
+            self.value = [[NSString alloc] initWithBytes:data.bytes + *offset
                 length:4
-                encoding:NSISOLatin1StringEncoding] autorelease];
+                encoding:NSISOLatin1StringEncoding];
             *offset += 4;
 
             break;
@@ -151,9 +151,9 @@
                 return NO;
             }
 
-            self.value = [[[NSString alloc] initWithBytes:data.bytes + *offset
+            self.value = [[NSString alloc] initWithBytes:data.bytes + *offset
                 length:len
-                encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE)] autorelease];
+                encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE)];
 
             *offset += len;
             break;

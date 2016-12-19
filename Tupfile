@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Werror
+CFLAGS = -Wall -Werror -fobjc-arc
 FRAMEWORKS = -framework Foundation -framework CoreFoundation
 
 : foreach src/*.m |> clang -c %f -o %o -I include $(CFLAGS) |> target/%B.o

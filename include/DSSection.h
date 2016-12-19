@@ -6,7 +6,7 @@
 
 }
 
-@property (assign) NSArray<DSItem*>* items;
+@property (strong) NSArray<DSItem*>* items;
 
 /**
 Populate a DSSection from a binary blob, updating the passed offset to point
