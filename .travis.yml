@@ -1,9 +1,18 @@
-cache: cargo
+sudo: required
 
-script: tup
+language: c
 
 addons:
   apt:
     packages:
+      - strace
+      - graphviz
       - libfuse-dev
-      - tup
+
+before_install:
+  # Build tup - No package is provided on the travis machines
+  - git clone git://github.com/gittup/tup.git $HOME/tup
+  - (cd $HOME/tup; ./bootstrap.sh)
+
+script:
+  - PATH=$PATH:$HOME/tup tup upd
