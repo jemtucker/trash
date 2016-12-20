@@ -4,8 +4,6 @@
 # Add the newly build tup to PATH
 PATH=$PATH:$HOME/tup
 
-pwd
-
 # Initialise .tup directory
 tup init
 
