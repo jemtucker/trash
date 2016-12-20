@@ -13,12 +13,13 @@ Usage: trash [-hlprv] FILE1 [FILE2] [...]
 
 ## Building
 Building trash requires [tup](http://gittup.org/tup/). Once installed simply run
- `tup upd` in the repository root directory. The trash executable will be output
- into the target directory.
+ `tup init && tup upd` in the repository root directory. The trash executable
+ will be output into the target directory.
 
  ```
  user$ git clone https://github.com/jemtucker/trash.git
  user$ cd trash
+ user$ tup init
  user$ tup upd
  user$ target/trash -h
  ```
