@@ -10,7 +10,7 @@ addons:
       - libfuse-dev
 
 before_install:
-  - travis/before_install.sh
+  - ci/before_install.sh
 
 script:
-  - travis/script.sh
+  - ci/script.sh
