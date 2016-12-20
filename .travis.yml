@@ -11,6 +11,6 @@ addons:
 
 before_install:
   - git clone git://github.com/gittup/tup.git $HOME/tup
-  - $HOME/tup/bootstrap.sh
+  - (cd $HOME/tup; ./bootstrap.sh)
 
 script: scripts/travis_build.sh
