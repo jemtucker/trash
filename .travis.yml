@@ -9,8 +9,6 @@ addons:
       - graphviz
       - libfuse-dev
 
-before_install:
-  - ci/before_install.sh
+before_install: ./scripts/travis_deps.sh
 
-script:
-  - ci/script.sh
+script: ./scripts/travis_build.sh

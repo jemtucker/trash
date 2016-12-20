@@ -1,6 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Travis-ci machines dont have tup pre-installed or access to a package so we
 # must build from source.
+
+pwd
+ls
+
+printenv
 
 # Clone the gittup repository
 git clone git://github.com/gittup/tup.git $HOME/tup

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Main build script. For now just initialises and invokes tup.
 
 # Add the newly build tup to PATH
