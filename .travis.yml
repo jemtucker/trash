@@ -15,4 +15,4 @@ before_install:
   - (cd $HOME/tup; ./bootstrap.sh)
 
 script:
-  - PATH=$PATH:$HOME/tup tup upd
+  - (cd $HOME/trash; pwd; ls; PATH=$PATH:$HOME/tup tup upd)
