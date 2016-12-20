@@ -12,5 +12,5 @@ git clone git://github.com/gittup/tup.git $HOME/tup
 
 # Run the tup build script
 pushd $HOME/tup
-./bootstrap.sh
+$HOME/tup/bootstrap.sh
 popd
