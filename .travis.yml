@@ -10,6 +10,7 @@ addons:
       - libfuse-dev
 
 before_install:
+  - brew cask install osxfuse
   - brew tap homebrew/fuse
   - brew install homebrew/fuse/tup
 
