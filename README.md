@@ -7,6 +7,7 @@ files using the Trash.
 
 ```
 Usage: trash [-hlprv] [FILE...]
+       --empty      Empty the trash
     -h --help       Show this help
     -l --list       List the current Trash contents
     -p --put-back   Restore a file from the Trash
