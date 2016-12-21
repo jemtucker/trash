@@ -21,7 +21,7 @@
     return self;
 }
 
-- (BOOL) listTrash {
+- (BOOL) getTrashContents: (NSArray**)contents {
     NSError* error = nil;
     NSURL *url = [_manager URLForDirectory:NSTrashDirectory
         inDomain:NSUserDomainMask
@@ -34,7 +34,7 @@
         return NO;
     }
 
-    NSArray *contents = [_manager contentsOfDirectoryAtURL:url
+    *contents = [_manager contentsOfDirectoryAtURL:url
         includingPropertiesForKeys:nil
         options:NSDirectoryEnumerationSkipsHiddenFiles
         error: &error];
@@ -42,6 +42,15 @@
     if (!contents) {
         ERROR(@"Error listing Trash contents [%@]",
             error.localizedDescription);
+        return NO;
+    }
+
+    return YES;
+}
+
+- (BOOL) listTrash {
+    NSArray* contents = nil;
+    if (![self getTrashContents:&contents]) {
         return NO;
     }
 
@@ -160,4 +169,22 @@
     }
 }
 
+- (BOOL) emptyTrash {
+    NSArray* contents = nil;
+    if (![self getTrashContents:&contents]) {
+        return NO;
+    }
+
+    for (NSURL* file in contents) {
+        NSError* error = nil;
+        if (![_manager removeItemAtURL:file error:&error]) {
+            ERROR(@"Could not delete file [%@]: %@",
+                file.path,
+                error.localizedDescription);
+            return NO;
+        }
+    }
+
+    return YES;
+}
 @end

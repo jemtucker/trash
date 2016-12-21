@@ -25,4 +25,10 @@ Delete a file from disk safely by sending to the Trash.
 */
 - (BOOL) trashFile:(NSString*) path recursive:(BOOL) recursive;
 
+/**
+Empty the trash by deleting its entire contents.
+@return TRUE if every file was successfully deleted
+*/
+- (BOOL) emptyTrash;
+
 @end

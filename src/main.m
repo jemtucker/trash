@@ -7,7 +7,8 @@ static BOOL g_recursive = NO;
 static BOOL g_restore = NO;
 
 void usage(const int code) {
-    printf("Usage: trash [-hlprv] FILE1 [FILE2] [...]\n");
+    printf("Usage: trash [-hlprv] [FILE...]\n");
+    printf("       --empty      Empty the trash\n");
     printf("    -h --help       Show this help\n");
     printf("    -l --list       List the current Trash contents\n");
     printf("    -p --put-back   Restore a file from the Trash\n");
@@ -37,6 +38,10 @@ void parseArgument(const NSString* arg) {
         [arg isEqualToString:@"-p"]) {
         // List the current contents of the trash
         g_restore = YES;
+    } else if ([arg isEqualToString:@"--empty"]) {
+        // Completely empty the trash
+        TrashManager* tm = [[TrashManager alloc] init];
+        exit([tm emptyTrash]);
     } else {
         // Unknown option
         ERROR(@"Illegal option [%@]", arg);
