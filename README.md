@@ -21,9 +21,9 @@ Building trash requires [tup](http://gittup.org/tup/). Once installed simply run
  will be output into the target directory.
 
  ```
- user$ git clone https://github.com/jemtucker/trash.git
- user$ cd trash
- user$ tup init
- user$ tup upd
- user$ target/trash -h
+ $ git clone https://github.com/jemtucker/trash.git
+ $ cd trash
+ $ tup init
+ $ tup upd
+ $ target/trash -h
  ```

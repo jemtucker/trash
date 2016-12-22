@@ -1,7 +1,7 @@
 #include <Foundation/Foundation.h>
 
-#define DEBUG(f, ...) [Log debug: [NSString stringWithFormat: f, ##__VA_ARGS__]]
-#define ERROR(f, ...) [Log error: [NSString stringWithFormat: f, ##__VA_ARGS__]]
+#define DEBUG(f, ...) [Log debug:[NSString stringWithFormat:f, ##__VA_ARGS__]]
+#define ERROR(f, ...) [Log error:[NSString stringWithFormat:f, ##__VA_ARGS__]]
 
 typedef enum {
     ERROR = 0,

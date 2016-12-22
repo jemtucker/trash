@@ -3,12 +3,16 @@
 #include "Log.h"
 #include "TrashManager.h"
 
+static BOOL g_empty = NO;
+static BOOL g_help = NO;
+static BOOL g_list = NO;
+static BOOL g_putback = NO;
 static BOOL g_recursive = NO;
-static BOOL g_restore = NO;
+static BOOL g_verbose = NO;
 
 void usage(const int code) {
-    printf("Usage: trash [-hlprv] [FILE...]\n");
-    printf("       --empty      Empty the trash\n");
+    printf("Usage: trash [-ehlprv] [FILE...]\n");
+    printf("    -e --empty      Empty the trash\n");
     printf("    -h --help       Show this help\n");
     printf("    -l --list       List the current Trash contents\n");
     printf("    -p --put-back   Restore a file from the Trash\n");
@@ -17,31 +21,23 @@ void usage(const int code) {
     exit(code);
 }
 
-void parseArgument(const NSString* arg) {
-    if ([arg isEqualToString:@"--verbose"] ||
-        [arg isEqualToString:@"-v"]) {
-        [Log setVerbose];
-        DEBUG(@"Verbose logging on");
-    } else if ([arg isEqualToString:@"--help"] ||
-        [arg isEqualToString:@"-h"]) {
-        usage(EXIT_SUCCESS);
-    } else if ([arg isEqualToString:@"--recursive"] ||
-        [arg isEqualToString:@"-r"]) {
+BOOL isEither(NSString* arg, NSString* a, NSString* b) {
+    return [arg isEqualToString:a] || [arg isEqualToString:b];
+}
+
+void parseArgument(NSString* arg) {
+    if (isEither(arg, @"--verbose", @"-v")) {
+        g_verbose = YES;
+    } else if (isEither(arg, @"--help", @"-h")) {
+        g_help = YES;
+    } else if (isEither(arg, @"--recursive", @"-r")) {
         g_recursive = YES;
-    } else if ([arg isEqualToString:@"--list"] ||
-        [arg isEqualToString:@"-l"]) {
-        // List the current contents of the trash
-        TrashManager* tm = [[TrashManager alloc] init];
-        [tm listTrash];
-        exit(EXIT_SUCCESS);
-    } else if ([arg isEqualToString:@"--put-back"] ||
-        [arg isEqualToString:@"-p"]) {
-        // List the current contents of the trash
-        g_restore = YES;
-    } else if ([arg isEqualToString:@"--empty"]) {
-        // Completely empty the trash
-        TrashManager* tm = [[TrashManager alloc] init];
-        exit([tm emptyTrash]);
+    } else if (isEither(arg, @"--list", @"-l")) {
+        g_list = YES;
+    } else if (isEither(arg, @"--put-back", @"-p")) {
+        g_putback = YES;
+    } else if (isEither(arg, @"--empty", @"-e")) {
+        g_empty = YES;
     } else {
         // Unknown option
         ERROR(@"Illegal option [%@]", arg);
@@ -67,6 +63,27 @@ int main(const int argc, const char* argv[]) {
             }
         }
 
+        if (g_help) {
+            usage(EXIT_SUCCESS);
+        }
+
+        if (g_verbose) {
+            [Log setVerbose];
+        }
+
+        if (g_list) {
+            // List the current contents of the trash
+            TrashManager* tm = [[TrashManager alloc] init];
+            [tm listTrash];
+            exit(EXIT_SUCCESS);
+        }
+
+        if (g_empty) {
+            // Completely empty the trash
+            TrashManager* tm = [[TrashManager alloc] init];
+            exit([tm emptyTrash]);
+        }
+
         // Check there are some filenames to parse, if not then exit
         if (pos == argc) {
             usage(EXIT_FAILURE);
@@ -81,7 +98,7 @@ int main(const int argc, const char* argv[]) {
 
             BOOL success = TRUE;
 
-            if (g_restore) {
+            if (g_putback) {
                 success = [manager restoreFile:path];
             } else {
                 success = [manager trashFile:path recursive:g_recursive];
@@ -91,5 +108,7 @@ int main(const int argc, const char* argv[]) {
                 return EXIT_FAILURE;
             }
         }
+
+        return EXIT_SUCCESS;
     }
 }
