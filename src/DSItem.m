@@ -42,9 +42,12 @@
         return NO;
     }
 
+    unsigned long encoding =
+        CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE);
+
     self.fileName = [[NSString alloc] initWithBytes:data.bytes + *offset
         length:nameLength * 2 // 2 byte characters
-        encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE)];
+        encoding:encoding];
 
     *offset += nameLength * 2;
 
@@ -102,8 +105,12 @@
                 case 'icvP':
                 {
                     NSPropertyListFormat format;
-                    NSData* plistdata = [NSData dataWithBytes:data.bytes + *offset + 4 length:len];
-                    NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:plistdata
+                    NSData* plistdata = [NSData
+                            dataWithBytes:data.bytes + *offset + 4
+                            length:len];
+
+                    NSDictionary *plist = [NSPropertyListSerialization
+                        propertyListWithData:plistdata
                         options:NSPropertyListImmutable
                         format:&format
                         error:error];
@@ -111,13 +118,17 @@
                     if (!error) {
                         self.value = plist;
                     } else {
-                        self.value = [NSData dataWithBytes:data.bytes + *offset + 4 length:len];
+                        self.value = [NSData
+                            dataWithBytes:data.bytes + *offset + 4
+                            length:len];
                     }
                     break;
                 }
 
                 default:
-                    self.value = [NSData dataWithBytes:data.bytes + *offset + 4 length:len];
+                    self.value = [NSData
+                        dataWithBytes:data.bytes + *offset + 4
+                        length:len];
                     break;
             }
             *offset += 4 + len;
@@ -131,7 +142,8 @@
                 return NO;
             }
 
-            self.value = [[NSString alloc] initWithBytes:data.bytes + *offset
+            self.value = [[NSString alloc]
+                initWithBytes:data.bytes + *offset
                 length:4
                 encoding:NSISOLatin1StringEncoding];
             *offset += 4;
@@ -151,9 +163,13 @@
                 return NO;
             }
 
-            self.value = [[NSString alloc] initWithBytes:data.bytes + *offset
+            unsigned long encoding =
+                CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE);
+
+            self.value = [[NSString alloc]
+                initWithBytes:data.bytes + *offset
                 length:len
-                encoding:CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF16BE)];
+                encoding:encoding];
 
             *offset += len;
             break;
@@ -166,7 +182,6 @@
                 return NO;
             }
 
-            //self.value = [NSNumber numberWithDouble:DSGetInt64((const uint8_t*)bytes + self.offset)];
             *offset += 8;
             break;
 
