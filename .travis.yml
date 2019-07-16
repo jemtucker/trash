@@ -2,16 +2,4 @@ sudo: required
 
 language: objective-c
 
-addons:
-  apt:
-    packages:
-      - strace
-      - graphviz
-      - libfuse-dev
-
-before_install:
-  - brew cask install osxfuse
-  - brew tap homebrew/fuse
-  - brew install homebrew/fuse/tup
-
 script: scripts/travis_build.sh
