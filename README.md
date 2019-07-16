@@ -16,14 +16,10 @@ Usage: trash [-ehlprv] [FILE...]
 ```
 
 ## Building
-Building trash requires [tup](http://gittup.org/tup/). Once installed simply run
-`tup init && tup upd` in the repository root directory. The trash executable
-will be output into the target directory.
+Build using make...
 
 ```
 $ git clone https://github.com/jemtucker/trash.git
-$ cd trash
-$ tup init
-$ tup upd
+$ cd trash && make 
 $ target/trash -h
 ```
