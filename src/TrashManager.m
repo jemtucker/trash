@@ -34,16 +34,31 @@
         return NO;
     }
 
-    *contents = [_manager contentsOfDirectoryAtURL:url
+    NSArray *raw = [_manager contentsOfDirectoryAtURL:url
         includingPropertiesForKeys:nil
-        options:NSDirectoryEnumerationSkipsHiddenFiles
+        options: 0 
         error: &error];
 
-    if (!contents) {
+    if (!raw) {
         ERROR(@"Error listing Trash contents [%@]",
             error.localizedDescription);
         return NO;
     }
+    
+    // Copy the files we care about into a new list to be returned. This is 
+    // just so we can filter out anything we don't want to return. 
+    NSMutableArray *clean = [NSMutableArray new];
+    for (NSString *file in raw) {
+        DEBUG(@"Trashed file: %@", file);
+        // We need to remove .DS_Store when listing the trash as this file
+        // is 'special'. It contains all the info of where trashed files came
+        // from!
+        if (![[file lastPathComponent] isEqualToString: @".DS_Store"]) {
+            [clean addObject:file];
+        }
+    }
+
+    *contents = clean;
 
     return YES;
 }
@@ -132,11 +147,6 @@
 }
 
 - (BOOL) trashFile:(NSString*) path recursive:(BOOL) recursive {
-    if ([path hasPrefix: @"."]) {
-        ERROR(@"Unsupported path");
-        return NO;
-    }
-
     NSURL *url;
     if ([path hasPrefix: @"/"]) {
         url = [NSURL fileURLWithPath:path];
