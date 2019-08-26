@@ -13,7 +13,10 @@
         _manager = [NSFileManager defaultManager];
 
         NSString* basePath = [_manager currentDirectoryPath];
-        _baseURL = [NSURL fileURLWithPath:basePath];
+        NSString* encodedPath = 
+            [basePath stringByAddingPercentEncodingWithAllowedCharacters:[
+                NSCharacterSet URLQueryAllowedCharacterSet]];
+        _baseURL = [NSURL fileURLWithPath:encodedPath];
 
         DEBUG(@"Initialized TrashManager with url [%@]", basePath);
     }
@@ -147,11 +150,14 @@
 }
 
 - (BOOL) trashFile:(NSString*) path recursive:(BOOL) recursive {
+    NSString* encodedPath = 
+        [path stringByAddingPercentEncodingWithAllowedCharacters:[
+            NSCharacterSet URLQueryAllowedCharacterSet]];
     NSURL *url;
-    if ([path hasPrefix: @"/"]) {
-        url = [NSURL fileURLWithPath:path];
+    if ([encodedPath hasPrefix: @"/"]) {
+        url = [NSURL fileURLWithPath:encodedPath];
     } else {
-        url = [NSURL URLWithString:path relativeToURL:_baseURL];
+        url = [NSURL URLWithString:encodedPath relativeToURL:_baseURL];
     }
 
     DEBUG(@"Built URL [%@]", [url absoluteURL]);
@@ -186,12 +192,10 @@
     }
 
     for (NSURL* file in contents) {
-        NSError* error = nil;
-        if (![_manager removeItemAtURL:file error:&error]) {
-            ERROR(@"Could not delete file [%@]: %@",
-                file.path,
-                error.localizedDescription);
-            return NO;
+        if ([self restoreFile:file.lastPathComponent]) {
+            DEBUG(@"Put-back file [%@]", file.lastPathComponent);
+        } else {
+            ERROR(@"Could not put-back file [%@]", file.lastPathComponent);
         }
     }
 
